@@ -1,0 +1,136 @@
+<?php
+// Создаём заголовок страницы, который загрузится в layout
+$this->title = "Поезд № ".$this->entry->number." ".$this->entry->stops[0]['station_name']." - ".$this->entry->stops[count($this->entry->stops)-1]['station_name'];
+$this->headTitle($this->title);
+//echo date("Y-m-d H:i:s",strtotime("2012-09-12 +1 day"));
+//var_dump($this->entry->stops);
+?>
+<div class="admin_options">
+    <a href="<?php echo $this->url(array('module'=>'admin','controller'=>'train', 'action'=>'edit', 'id'=>$this->entry->id),'editTrain',true);?>">Редактировать</a>
+    <a href="<?php echo $this->url(array('module'=>'admin','controller'=>'train', 'action'=>'delete', 'id'=>$this->entry->id),'deleteTrain',true);?>" class="del_link">Удалить</a>
+</div>
+<div style="padding:10px 0;"><a href="javascript:void(0)" onclick="show_map()">Карта</a></div>
+<table border="1" cellpadding="5">
+    <tr class="table_header"><td>Станция</td><td>Прибытие</td><td>Отправление</td><td>Время в пути</td></tr>
+    <?php
+    $day = date("Y-m-d");
+    foreach ($this->entry->stops as $n => $stop) {
+    ?>
+    <tr>
+        <td><a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'view', 'id'=>$stop['station_id']),'adminviewStation',true);?>"><?php echo $stop['station_name'] ?></a></td>
+        <td><?php echo $stop['arrival'] ?></td>
+        <td><?php echo $stop['departure'] ?></td>
+        <td>
+            <?php
+                if ($n != 0) {
+                    if ($stop['arrival'] < $this->entry->stops[$n-1]['departure'] || $stop['arrival'] < $this->entry->stops[$n-1]['arrival'])
+                    $day = date("Y-m-d",strtotime($day." +1 day"));
+                    
+                    $time1 = strtotime($day.$stop['arrival'].":00");
+                    
+                    $this_timezone = $stop["station_timezone_value"];
+                    $previous_timezone = $this->entry->stops[0]["station_timezone_value"];
+                    
+                    $diff = $this_timezone-$previous_timezone;
+                    
+                    $time2 = strtotime(date("Y-m-d").$this->entry->stops[0]['departure'].":00");
+                    $dif = $time1 - $time2 - $diff*3600;
+                    $hours = floor($dif / 3600);
+                    $minutes = floor(($dif - ($hours * 3600)) / 60);
+                    echo ($hours ? $hours." ч " : "").($minutes ? $minutes." мин" : "");
+                }
+            ?>
+        </td>
+    </tr>
+    <?php } ?>
+</table>
+<div id="overlay" style="display:none;"></div>
+<a href="javascript:void(0)" onclick="hide_map()" class="close_map" style="display:none;"><img src="/images/cross.png"/></a>
+<div id="map_canvas" style="width:970px; height:530px; visibility:hidden"></div>
+<div id="stations" style="display:none">
+<?php foreach ($this->entry->stops as $n => $stop) { ?>
+    <span class="station_name"><?php echo $stop['station_name']; ?></span>
+    <span class="station_lat"><?php echo $stop['station_lat']; ?></span>
+    <span class="station_lng"><?php echo $stop['station_lng']; ?></span>
+<?php } ?>
+</div>
+<script type="text/javascript">
+    var geocoder;
+    var map;
+    var infowindow = [];
+    var marker = [];
+    var path = new Array();
+    var stops = new Array();
+    var total = <?php echo count($this->entry->stops); ?>;
+    $(document).ready(function(){
+        initialize();
+        adjust_map();
+    });
+    function initialize() {
+        geocoder = new google.maps.Geocoder();
+        draw_map();
+    }
+    function draw_map() {
+        var myOptions = {
+            zoom: 6,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+        var location = new google.maps.LatLng(<?php echo $this->entry->stops[0]['station_lat']; ?>,<?php echo $this->entry->stops[0]['station_lng']; ?>);
+        map.setCenter(location);
+        var c = 0;
+        $("#stations .station_name").each(function(){
+            createMarker(c, $("#stations .station_lat").eq(c).html(),$("#stations .station_lng").eq(c).html(), $(this).html());
+            c++;
+        });
+    }
+    
+    function createMarker(c, lat, lng, html) {
+        var newmarker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map,
+            title: html
+        });
+
+        newmarker['infowindow'] = new google.maps.InfoWindow({
+                content: html
+            });
+
+        google.maps.event.addListener(newmarker, 'click', function() {
+            this['infowindow'].open(map, this);
+        });
+
+        marker.push(newmarker);
+        add_point(c, lat, lng);
+    }
+    
+    function add_point(c,lat,lng) {
+        var n = path.length;
+        path[n] = new google.maps.LatLng(lat,lng);
+        stops[c] = n;
+        if (path.length == total) {
+            var new_path = new Array();
+            for (var key in stops) {
+                var value = stops[key];
+                new_path[key] = path[value];
+            }
+            var flightPath = new google.maps.Polyline({
+                path: new_path,
+                strokeColor: "#0000CD",
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            flightPath.setMap(map);
+        }
+    }
+    function show_map() {
+        $("#overlay").show();
+        $("#map_canvas").css('visibility','visible');
+        $("a.close_map").show();
+    }
+    function hide_map() {
+        $("#overlay").hide();
+        $("#map_canvas").css('visibility','hidden');
+        $("a.close_map").hide();
+    }
+</script>

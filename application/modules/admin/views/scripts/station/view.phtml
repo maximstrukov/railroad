@@ -1,0 +1,75 @@
+<?php
+    // Создаём заголовок страницы, который загрузится в layout
+    $this->title = "Просмотр станции ".$this->name;
+    $this->headTitle($this->title);
+?>
+<?php if (Zend_Auth::getInstance()->getIdentity()->username=='admin') { ?>
+<div class="admin_options">
+    <a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'edit', 'id'=>$this->id),'editStation',true);?>">Редактировать</a>
+    <a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'delete', 'id'=>$this->id),'deleteStation',true);?>" class="del_link">Удалить</a>
+</div>
+<?php } ?>
+<h3 style="margin: 10px 0">Временная зона: <?php echo $this->timezone->value.' ('.$this->timezone->description.')' ?></h3>
+<div style="padding:10px 0;"><a href="javascript:void(0)" onclick="show_map()">Карта</a></div>
+<table>
+<tr>
+    <td>№</td>
+    <td>Станция отправления</td>
+    <td>Станция прибытия</td>
+    <td>Периодичность</td>
+    <td>Прибытие</td>
+    <td>Отправление</td>
+    <td>Прибытие на конечную станцию</td>
+</tr>
+<?php foreach ($this->trains as $train) { ?>
+    <tr>
+        <td><a href="<?php echo $this->url(array('module'=>'admin','controller'=>'train', 'action'=>'view', 'id'=>$train["train_id"]),'adminviewTrain',true);?>"><?php echo $train["train_number"]; ?></a></td>
+        <td><a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'view', 'id'=>$train["from_station_id"]),'adminviewStation',true);?>"><?php echo $this->escape($train["from_station_name"]);?></a></td>
+        <td><a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'view', 'id'=>$train["to_station_id"]),'adminviewStation',true);?>"><?php echo $this->escape($train["to_station_name"]);?></a></td>
+        <td><?php echo $train["period"]; ?></td>
+        <td><?php echo $train["arrival"]; ?></td>
+        <td><?php echo $train["departure"] ?></td>
+        <td><?php echo $train["last_arrival"] ?></td>
+    </tr>
+<?php } ?>
+</table>
+<div id="overlay" style="display:none;"></div>
+<a href="javascript:void(0)" onclick="hide_map()" class="close_map" style="display:none;"><img src="/images/cross.png"/></a>
+<div id="map_canvas" style="width:970px; height:530px; visibility: hidden"></div>
+<script type="text/javascript">
+    var map;
+    $(document).ready(function(){
+        initialize();
+        adjust_map();
+    });
+    function initialize() {
+        geocoder = new google.maps.Geocoder();
+        var myOptions = {
+            zoom: 6,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+        var location = new google.maps.LatLng(<?php echo $this->lat; ?>,<?php echo $this->lng; ?>);
+        map.setCenter(location);
+        var marker = new google.maps.Marker({
+            map: map,
+            position: location
+        });
+        var infowindow = new google.maps.InfoWindow({
+            content: '<?php echo $this->name; ?>'
+        });                
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+        });
+    }
+    function show_map() {
+        $("#overlay").show();
+        $("#map_canvas").css('visibility','visible');
+        $("a.close_map").show();
+    }
+    function hide_map() {
+        $("#overlay").hide();
+        $("#map_canvas").css('visibility','hidden');
+        $("a.close_map").hide();
+    }    
+</script>

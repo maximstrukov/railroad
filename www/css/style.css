@@ -1,0 +1,490 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    font-size: 100%;
+}
+html {
+    height: 100%;
+}
+body {
+    min-height: 100%;
+    height: 100%;
+    background: none repeat scroll 0% 0% rgb(250, 250, 176);
+    color: rgb(0, 0, 0);
+    font-weight: normal;
+    font-family: Arial,Verdana,Helvetica,Sans-Serif;
+}
+h1 {
+    font-size:22px;
+    padding: 10px 0;
+}
+p {
+    padding: 5px 0;
+}
+a:hover {
+    text-decoration: none;
+}
+.page {
+    width: 1000px;
+    margin: auto;
+    height: auto ! important;
+    min-height: 100%;
+    background: none repeat scroll 0% 0% rgb(240, 240, 240);
+}
+.page .footer_guarantor {
+    clear: both;
+}
+.footer {
+    margin: -47px auto auto;
+    width: 1000px;
+    height: 47px;
+    clear: both;
+    background: #D2B48C;
+}
+.page .header {
+    height: 100px;
+    background-color: #6A5ACD;
+}
+.page .patch_minheight {
+    width: 1px;
+    height: 250px;
+    float: right;
+}
+.page .mainbar {
+    overflow: hidden;
+    float: left;
+    padding-bottom: 10px;
+}
+
+.clear {
+    clear: both;
+}
+.auth_block {
+    float:right;
+    position: relative;
+}
+
+#admin-header{
+    height:50px;
+    width: 100%;
+    background: #FFE4B5;
+    line-height: 50px;
+    font-weight: bold;
+}
+.auth_block dt, .auth_block dd {
+    float:left;
+}
+/*table.train_list {
+    border: 1px solid #000;
+    padding: 5px;
+}*/
+#admin-header, #header-menu, .mainbar, .footer {
+    width: 980px;
+    padding: 0 10px;
+}
+table td {
+    padding: 5px;
+    border: 1px solid #000;
+}
+table td.actions {
+    padding: 3px 0 0 5px;
+}
+table td.actions img{
+    width: 24px;
+    height: 24px;
+}
+div.table td.actions a {
+    margin: 0 8px;
+    float: left;
+    background: none;
+    border: 0 none;
+}
+table.stations td.name-cell {
+    width: 243px;
+}
+table.trains td.station-cell {
+    width: 183px;
+}
+table td a.del_link{
+    color: brown;
+    margin-left: 5px;
+}
+#header-menu {
+    height: 50px;
+}
+#header-menu a {
+    color: yellow;
+    font-weight: bold;
+    text-decoration: none;
+}
+#header-menu a:hover {
+    text-decoration: underline;
+}
+#header-menu ul li {
+    list-style: none;
+    float:left;
+    height: 50px;
+    line-height: 50px;
+    margin-right: 15px;
+}
+#header-menu ul li.last {
+    float: right;
+    margin-right: 5px;
+}
+
+dl.zend_form input[type=text],
+dl.zend_form input[type=password],
+dl.zend_form textarea {
+    border: 1px solid #2F4F4F;
+    padding: 3px;
+    width: 200px;
+}
+form#station input#name,
+form#station input#note,
+form#station input.names{
+    width: 461px;
+}
+dl.zend_form select {
+    border: 1px solid #2F4F4F;
+    padding: 3px;
+    width: 208px;
+}
+dl.zend_form select#timezone, dl.zend_form select.timezones {
+    width: 469px;
+    padding: 3px;
+}
+dl.zend_form input[type=submit] {
+    border: 1px solid #2F4F4F;
+    width: 208px;
+    height: 26px;
+}
+form#train dl.zend_form dd {
+    margin-left: 175px;
+    /*position: relative;*/
+}
+dl.zend_form dd#submit-element {
+    padding-top: 10px;
+}
+ul.errors {
+    list-style: none;
+    margin:10px 0 10px 100px;
+    color: red;
+}
+form#train ul.errors {
+    margin-left: 0;
+}
+form#station dd#timezone-element ul.errors {
+    margin: 10px 0 0;
+}
+.field_separator {
+    height: 10px;
+}
+.record_separator {
+    height: 20px;
+}
+.record_separator hr {
+    background-color: #000000;
+    height: 2px;
+    width: 468px;
+    position: relative;
+    top: 9px;
+}
+input.new_name {
+    color: grey;
+}
+div.add_stop {
+    padding: 7px 0 10px;
+    text-align: center;
+    width: 208px;
+}
+form#station a.add_more {
+    margin-left: 10px;
+}
+.stops_delimiter {
+    height: 10px;
+}
+input[name="stops_text[]"] {
+    margin-left: 10px;
+}
+dl.zend_form input[name="arrival[]"],
+dl.zend_form input[name="departure[]"],
+dl.zend_form input[name="timezone[]"] {
+    width:43px;
+    margin-left: 5px;
+}
+dl.zend_form span.add_time_label {
+    margin: 0 2px 0 12px;
+}
+form#login dl dt {
+    margin: 0 5px 0 10px;
+}
+select.timezone_short {
+    margin-left: 8px !important;
+    width:80px !important;
+    padding: 2px !important;
+    margin-right: 5px !important;
+}
+tr.table_header {
+    font-weight: bold;
+}
+.ac_results {
+    padding: 3px;
+    background-color: #FFFFE0;
+    border: 1px solid #000;
+}
+.ac_results ul li {
+    list-style: none;
+    padding: 3px 0;
+}
+.ac_results ul li.ac_over {
+    background-color: #87CEFA;
+}
+.ac_results ul li:hover {
+    background-color: #87CEFA;
+}
+.zend_form > ul {
+    margin-left: 175px !important;
+}
+#stop_rows {
+    position: relative;
+    left: -63px;
+    padding: 0;
+    border: 0 none;
+    width: 820px;
+}
+#stop_rows td {
+    border: 0 none;
+    padding: 0;
+    border-collapse: 0;
+}
+tr.myDragClass td{
+    background-color: #ddd;
+}
+tr.myDropClass td{
+    background-color: #ccc;
+}
+td.dragHandle {
+    background-image: url(../images/updown2.gif);
+    background-repeat: no-repeat;
+    background-position: 0 6px;
+    cursor: move;
+}
+td.dragHandle {
+    width: 20px;
+}
+a.stop_delete {
+    background: url(../images/delete.png) no-repeat;
+    display:block;
+    width:16px;
+    height:16px;
+    margin-top: -10px;
+    margin-right: 15px;
+}
+#map_canvas {
+    z-index: 3;
+    position: fixed !important;
+}
+#overlay {
+    background: url("../images/opacity.gif") repeat scroll 0 0 transparent;
+    height: 100%;
+    left: 0;
+    opacity: 0.9;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+a.close_map {
+    /*position: absolute;
+    left: -32px;
+    top: -32px;*/
+    position: fixed;
+    z-index: 4;
+}
+a.admin_header_link {
+    margin-right: 15px;
+}
+
+#youtube_results {
+    
+}
+#youtube_results h2 {
+    font-size: 20px;
+    padding: 20px 0;
+    text-align: center;
+}
+#youtube_results .video_item {
+    float: left;
+    margin-right: 7px;
+    text-align: center;
+    width: 130px;
+    height: 250px;
+    overflow: hidden;
+}
+#youtube_results .video_title {
+    font-size: 14px;
+    font-family: Arial,Helvetica,Sans-Serif;
+}
+#youtube_results hr {
+    border: 1px solid;
+    width: 98%;
+    color: #808080;
+}
+
+#progress {
+    border: 1px solid #000;
+    height: 30px;
+    width: 100%;
+    background-color: #fff;
+    line-height: 30px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+    display:none;
+}
+#progress span {
+    color: #000;
+    position: absolute;
+}
+#progress #bar {
+    background-color: #8C80B0;
+    height: 100%;
+    width: 0%;
+}
+#admin-header input#login {
+    width: 120px;
+}
+#admin-header form label {
+    font-weight: normal;
+    font-size: 14px;
+    color: #0000C9;
+}
+#admin-header form input {
+    border-color: #0000C9;
+}
+#admin-header form#login input[type="text"],
+#admin-header form#login input[type="password"] {
+    width: 150px;
+}
+#admin-header form#login input[type="checkbox"] {
+    position: relative;
+    top: 2px;
+}
+
+.mainbar form#login dt {
+    float: left;
+    width: 100px;
+    height: 28px;
+    line-height: 28px;
+}
+.mainbar form#login dd {
+    margin-bottom: 5px;
+}
+.mainbar form#login dd input[type=checkbox] {
+    height: 28px;
+    position: relative;
+    top: 1px;
+}
+.mainbar form#login #Remember-element {
+    padding-left: 115px;
+}
+
+.pagination {
+    padding-top: 20px;
+}
+.pagination a, .pagination span {
+    float: left;
+    height: 25px;
+    line-height: 25px;
+    margin-right: 10px;
+    text-align: center;
+    text-decoration: none;
+    width: 30px;
+}
+.pagination a {
+    background-color: #F490FF;
+}
+.pagination a:hover {
+    background-color: #C20081;
+    color: #fff;
+}
+div.table {
+    min-height: 350px;
+}
+.ajax_search {
+    padding: 10px 0;
+}
+.ajax_search input[type="text"] {
+    border: 1px solid #18019E;
+    font-size: 16px;
+    padding: 2px;
+}
+#station_search {
+    width: 296px;
+}
+#train_search {
+    width: 579px;
+}
+#route_search {
+    padding: 10px 0;
+}
+#route_search input {
+    border: 1px solid #18019E;
+}
+#route_search input[type="text"] {
+    margin-right: 10px;
+    color: #C71585;
+    padding: 2px;
+    width: 200px;
+}
+#route_search input.edit {
+    color: #00008B;
+}
+#route_search input[type="submit"] {
+    padding: 1px 4px;
+}
+td.no_results {
+    border: 0 none;
+    font-weight: bold;
+    text-align: center;
+}
+
+h1.main_title {
+    color: #800000;
+    float: left;
+    font-family: Times New Roman;
+    font-size: 26px;
+    letter-spacing: 2px;
+    padding: 0;
+}
+.greeting {
+    margin-right: 23px;
+    position: relative;
+    top: 1px;    
+}
+a.youtube-edit {
+    left: 7px;
+    position: relative;
+    top: 9px;    
+}
+a.expand_link {
+    margin-left: 10px;
+    font-size: 80%;    
+}
+.video_item.extended {
+    display:none;
+}
+#categories {
+    height: 40px;
+}
+#categories a {
+    float: left;
+    margin-right: 15px;
+}
+#categories a.active {
+    text-decoration: none;
+    color: #000;
+    cursor: default;
+}

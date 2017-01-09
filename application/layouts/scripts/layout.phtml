@@ -1,0 +1,80 @@
+<?php
+$module = Zend_Registry::get('module');
+
+// Создаём meta тег Content-Type
+$this->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');  
+// Указываем символ разделитель в теге title
+$this->headTitle()->setSeparator(' - ');
+// Определяем содержимое тега title
+$this->headTitle()->prepend('ЖД');
+// Выводим doctype, который считывается из application.ini
+echo $this->doctype();
+
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <?php
+    echo $this->headMeta();
+    echo $this->headTitle();
+    $this->headLink()->appendStylesheet('/css/style.css');
+    if ($module=='admin') $this->headLink()->appendStylesheet('/css/admin.css');
+    $this->headScript()->prependFile('/js/jquery.js');
+    $this->headScript()->appendFile('/js/main.js');
+    echo $this->headLink();
+    echo $this->headScript();
+    ?>
+</head>
+<body>
+<div class="page">
+    <div class="header">
+        <div id="admin-header">
+            <!--<?php if (Zend_Auth::getInstance()->hasIdentity() ) { ?><a class="admin_header_link" href="/admin">Админ Панель</a><?php } ?>Гостевая Панель-->
+            <h1 class="main_title">RailRoad</h1>
+            <div class="auth_block">
+                <?php
+                if (Zend_Auth::getInstance()->hasIdentity()) {
+                    $url = $this->url(array('module'=>'default','controller'=>'auth', 'action'=>'logout'));
+                    echo "<span class='greeting'>Привет, Админ!</span><a href=\"{$url}\">Выход</a>";
+                }
+                else {
+                    echo Zend_Registry::get('login_form');
+                    echo "<div class='clear'></div>";
+                }
+                ?>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+        <div id="header-menu">
+            <ul>
+                <li><a href="<?php echo $this->url(array('module'=>$module,'controller' => 'train','action' => 'index'),'default',true) ?>">Поезда</a></li>
+                <li><a href="<?php echo $this->url(array('module'=>$module,'controller' => 'station','action' => 'index'),'default',true) ?>">Станции</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'train','action' => 'route'),'default',true) ?>">Поиск по маршруту</a></li>
+                <li class="last">
+                    <a href="<?php echo $this->url(array('controller' => 'youtube','action' => 'index'),'default',true) ?>">Запросы Youtube</a>
+                    <?php if ($module=='admin') : ?>
+                    <a class="youtube-edit" href="<?php echo $this->url(array('module'=>$module,'controller' => 'youtube','action' => 'index'),'default',true) ?>">
+                        <img src="/images/yt-edit.png" alt="Редактировать Запросы Youtube" title="Редактировать Запросы Youtube"/>
+                    </a>
+                    <?php endif; ?>
+                </li>
+                <!--<li class="last">
+                    <div style="position:relative;width:200px; margin-top: -1px">
+                        <iframe src="http://ru.thetimenow.com/clock/ukraine?t=n&amp;embed=1&amp;text=0.1&amp;textdate=15&amp;format=24&amp;digitalclock=20&amp;analogclock=30&amp;letter_spacing=1&amp;bordersize=1&amp;bordercolor=BCE2F7&amp;bgcolor=5C4B63&amp;colorloc=5C4B63&amp;colordigital=73D5FF&amp;colordate=73D5FF&amp;styleloc=normal&amp;styledigital=normal&amp;styledate=normal&amp;right=0" style="border:none;overflow:hidden;" height="50" scrolling="no" width="200"></iframe>
+                    </div>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+    <div class="mainbar">
+        <div class="patch_minheight"></div>
+        <h1><?php echo $this->escape($this->title); ?></h1>
+        <?php echo $this->layout()->content ?>
+    </div>
+    <div class="footer_guarantor"></div>
+</div>
+<div class="footer">
+    <h1>(c) John McLane</h1>
+</div>
+</body>
+</html>

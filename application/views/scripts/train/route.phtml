@@ -1,0 +1,17 @@
+<?php
+// Создаём заголовок страницы, который загрузится в layout
+$this->title = "Поиск поездов по маршруту";
+$this->headTitle($this->title);
+?>
+<!--<div class="ajax_search">
+    <input type="text" id="train_search" value="<?php echo $this->query; ?>"/>
+</div>-->
+<form id="route_search" method="post">
+    <input type="text" id="route_from" value="Откуда" class="station_input"/>
+    <input type="text" id="route_to" value="Куда" class="station_input"/>
+    <input type="submit" value="Поиск"/>
+</form>
+<div class="table">
+    <table class="train_list">
+    </table>
+</div>

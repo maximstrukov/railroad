@@ -1,0 +1,9 @@
+<tr>
+    <td width="30"><?php echo ($this->partialCounter + ($this->partialLoop()->view->page - 1)*$this->partialLoop()->view->pagesize); ?></td>
+    <td class="name-cell"><?php echo $this->escape($this->name);?></td>
+    <td class="actions">
+        <a href="<?php echo $this->url(array('controller'=>'station', 'action'=>'view', 'id'=>$this->id),'viewStation',true);?>">
+            <img src="/images/admin_view.png" alt="Просмотр" title="Просмотр"/>
+        </a>
+    </td>
+</tr>

@@ -1,0 +1,14 @@
+<tr>
+    <td width="30"><?php echo ($this->partialCounter + ($this->partialLoop()->view->page - 1)*$this->partialLoop()->view->pagesize); ?></td>
+    <td class="name-cell"><?php echo $this->escape($this->number);?></td>
+    <td class="name-cell"><?php echo $this->escape($this->period);?></td>
+    <td class="name-cell station-cell"><a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'view', 'id'=>$this->stops[0]["station_id"]),'adminviewStation',true);?>"><?php echo $this->escape($this->stops[0]["station_name"]);?></a></td>
+    <td class="name-cell station-cell"><a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'view', 'id'=>$this->stops[count($this->stops)-1]["station_id"]),'adminviewStation',true);?>"><?php echo $this->escape($this->stops[count($this->stops)-1]["station_name"]);?></a></td>
+    <td class="name-cell"><?php echo $this->escape($this->stops[0]["departure"]);?></td>
+    <td class="name-cell"><?php echo $this->escape($this->stops[count($this->stops)-1]["arrival"]);?></td>
+    <td class="actions">
+        <a href="<?php echo $this->url(array('module'=>'default','controller'=>'train', 'action'=>'view', 'id'=>$this->id),'viewTrain',true);?>">
+            <img src="/images/admin_view.png" alt="Просмотр" title="Просмотр"/>
+        </a>
+    </td>
+</tr>

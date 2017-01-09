@@ -1,0 +1,18 @@
+<?php
+// Создаём заголовок страницы, который загрузится в layout
+$this->title = "Список поездов";
+$this->headTitle($this->title);
+?>
+<p><a href="<?php echo $this->url(array('controller'=>'train','action'=>'add'));?>">Добавить поезд</a></p>
+<div class="ajax_search">
+    <input type="text" id="train_search" value="<?php echo $this->query; ?>"/>
+</div>
+<div class="table">
+    <table class="trains">
+        <?php
+            // Создаём patrialLoop, передав массив поездов, полученных от контроллера
+            echo $this->partialLoop('partials/train.phtml', $this->trains);
+        ?>
+    </table>
+</div>
+<?php if ($this->pages > 1) echo $this->partial('partials/pagination.phtml', array('controller'=>'train')); ?>

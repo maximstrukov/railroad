@@ -1,0 +1,110 @@
+<?php
+// Создаём заголовок страницы, который загрузится в layout
+$this->title = "Поезд № ".$this->entry->number." ".$this->entry->stops[0]['station_name']." - ".$this->entry->stops[count($this->entry->stops)-1]['station_name'];
+$this->headTitle($this->title);
+?>
+<div style="padding:10px 0;"><a href="javascript:void(0)" onclick="show_map()">Карта</a></div>
+<table border="1" cellpadding="5">
+    <tr><td>Станция</td><td>Прибытие</td><td>Отправление</td><td>Время в пути</td></tr>
+    <?php
+    $day = date("Y-m-d");
+    foreach ($this->entry->stops as $n => $stop) {
+    ?>
+    <tr>
+        <td><a href="<?php echo $this->url(array('module'=>'default','controller'=>'station', 'action'=>'view', 'id'=>$stop['station_id']),'viewStation',true);?>"><?php echo $stop['station_name'] ?></a></td>
+        <td><?php echo $stop['arrival'] ?></td>
+        <td><?php echo $stop['departure'] ?></td>
+        <td>
+            <?php
+                if ($n != 0) {
+                    if ($stop['arrival'] < $this->entry->stops[$n-1]['departure'] || $stop['arrival'] < $this->entry->stops[$n-1]['arrival'])
+                    $day = date("Y-m-d",strtotime($day." +1 day"));
+                    
+                    $time1 = strtotime($day.$stop['arrival'].":00");
+                    
+                    $this_timezone = $stop["station_timezone_value"];
+                    $previous_timezone = $this->entry->stops[0]["station_timezone_value"];
+                    
+                    $diff = $this_timezone-$previous_timezone;
+                    
+                    $time2 = strtotime(date("Y-m-d").$this->entry->stops[0]['departure'].":00");
+                    $dif = $time1 - $time2 - $diff*3600;
+                    $hours = floor($dif / 3600);
+                    $minutes = floor(($dif - ($hours * 3600)) / 60);
+                    echo ($hours ? $hours." ч " : "").($minutes ? $minutes." мин" : "");
+                }
+            ?>
+        </td>
+    </tr>
+    <?php } ?>
+</table>
+<div id="overlay" style="display:none;"></div>
+<a href="javascript:void(0)" onclick="hide_map()" class="close_map" style="display:none;"><img src="/images/cross.png"/></a>
+<div id="map_canvas" style="width:970px; height:530px; visibility:hidden"></div>
+<script type="text/javascript">
+    var geocoder;
+    var map;
+    var path = new Array();
+    var stops = new Array();
+    var total = <?php echo count($this->entry->stops); ?>;
+    $(document).ready(function(){
+        initialize();
+        adjust_map();
+    });
+    function initialize() {
+        geocoder = new google.maps.Geocoder();
+        draw_map();
+    }
+    function draw_map() {
+        var myOptions = {
+            zoom: 6,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+        var location = new google.maps.LatLng(<?php echo $this->entry->stops[0]['station_lat']; ?>,<?php echo $this->entry->stops[0]['station_lng']; ?>);
+        map.setCenter(location);
+        <?php foreach ($this->entry->stops as $n => $stop) { ?>
+            var location = new google.maps.LatLng(<?php echo $stop['station_lat']; ?>,<?php echo $stop['station_lng']; ?>);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: location
+            });
+            var infowindow = new google.maps.InfoWindow({
+                content: '<?php echo $stop['station_name']; ?>'
+            });                
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.open(map,marker);
+            });
+            add_point(<?php echo $n; ?>,<?php echo $stop['station_lat']; ?>,<?php echo $stop['station_lng']; ?>);
+        <?php } ?>
+    }
+    function add_point(c,lat,lng) {
+        var n = path.length;
+        path[n] = new google.maps.LatLng(lat,lng);
+        stops[c] = n;
+        if (path.length == total) {
+            var new_path = new Array();
+            for (var key in stops) {
+                var value = stops[key];
+                new_path[key] = path[value];
+            }
+            var flightPath = new google.maps.Polyline({
+                path: new_path,
+                strokeColor: "#0000CD",
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            flightPath.setMap(map);
+        }
+    }
+    function show_map() {
+        $("#overlay").show();
+        $("#map_canvas").css('visibility','visible');
+        $("a.close_map").show();
+    }
+    function hide_map() {
+        $("#overlay").hide();
+        $("#map_canvas").css('visibility','hidden');
+        $("a.close_map").hide();
+    }
+</script>

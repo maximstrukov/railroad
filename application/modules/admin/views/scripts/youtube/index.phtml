@@ -1,0 +1,186 @@
+<?php
+$this->title = "Запросы Youtube";
+$this->headTitle($this->title);
+?>
+<div id="youtube_edit">
+    <div id="yt_add_row">
+        <input type="text" value=""/>
+        <select name="youtube_category" id="youtube_category">
+            <?php foreach ($this->categories as $category): ?>
+            <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <a href="javascript:void(0)">Добавить</a>
+        <span>Сохранено!</span>
+    </div>
+    <?php foreach ($this->rows as $row): ?>
+        <div class="yt_row" id="<?php echo $row['id']; ?>">
+            <input type="checkbox" <?php if ($row['status']) echo "checked='checked'"; ?> onclick="status_switch(this)"/>
+            <input type="text" value="<?php echo trim($row["request"]); ?>" onfocus="request_focus(this)" onblur="request_blur(this)"/>
+            <select onchange="change_category(this)">
+                <?php foreach ($this->categories as $category): ?>
+                <option value="<?php echo $category['id']; ?>" <?php if ($category['id']==$row['category']) echo ' selected'; ?>><?php echo $category['name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <img src="/images/galochka.png"/>
+            <a href="javascript:void(0)" onclick="delete_row(<?php echo $row['id']; ?>)">Удалить</a>
+            <div class="clear"></div>
+        </div>
+    <?php endforeach; ?>
+    <br/>
+    <!--<a class="youtube_run" href="<?php echo $this->url(array('controller' => 'youtube','action' => 'index'),'default',true) ?>">Выполнить</a>
+    <textarea name="request"><?php foreach ($this->rows as $row): echo trim($row["request"]).PHP_EOL; endforeach; ?></textarea>
+    <div class="clear"></div>-->
+    <div class="saved">
+        <input type="button" value="Сохранить"/><span>Сохранено!</span>
+        <div class="clear"></div>
+    </div>
+    <div class="error"></div>
+</div>
+<script type="text/javascript">
+    var rows = new Array();
+    var categories = new Array();
+    var actual_request = new Array();
+    $(function(){
+        $("#youtube_edit input[type='button']").click(function(){
+            $(".yt_row").each(function(i,elem){
+                status = $(elem).find("input[type='checkbox']").is(':checked');
+                request = $.trim($(elem).find("input[type='text']").val());
+                category = $(elem).find('select').val();
+                rows[i] = new Array(request, status, category);
+            });
+            $.post( "youtube/index", {rows: rows}, function(data) {
+                if (data.result=="ok") {
+                    $(".saved span").fadeIn(500);
+                    $(".yt_row").remove();
+                    for (var i in data.rows) {
+                        new_row = '<div class="yt_row" id="'+data.rows[i].id+'">';
+                        new_row += '<input type="checkbox"';
+                        if (data.rows[i].status==1) new_row += ' checked="checked"';
+                        new_row += ' onclick="status_switch(this)"/>';
+                        new_row += '<input type="text" value="'+data.rows[i].request+'" onfocus="request_focus(this)" onblur="request_blur(this)"/>';
+                        new_row += '<select onchange="change_category(this)">';
+                        for (var c in data.categories) {
+                            new_row += '<option value="'+data.categories[c].id+'"';
+                            if (data.categories[c].id == data.rows[i].category) new_row += ' selected';
+                            new_row += '>'+data.categories[c].name;
+                            new_row += '</option>';
+                        }
+                        new_row += '</select>';
+                        new_row += '<img src="/images/galochka.png"/>';
+                        new_row += '<a href="javascript:void(0)" onclick="delete_row('+data.rows[i].id+')">Удалить</a>';
+                        new_row += '</div>';
+                        if (i == 0) $("#yt_add_row").after(new_row);
+                        else $(".yt_row").last().after(new_row);
+                    }
+                    timeout_id = window.setTimeout('$(".saved span").fadeOut(500)',3000);
+                } else {
+                    $("#youtube_edit .error").html(data).show();
+                }
+            }, "json");
+        });
+        
+        $("#yt_add_row a").click(function(){
+            add_request();
+        });
+        
+        $("#yt_add_row input").keyup(function(e){
+            if (e.keyCode==13) {
+                add_request();
+            }
+        });
+        
+    });
+    
+    function add_request() {
+        request = $.trim($("#yt_add_row input").val());
+        if (request != '') {
+            $.post( "youtube/add", {row: $("#yt_add_row input").val(), category: $("#youtube_category").val()}, function(data) {
+                if (data.result=="ok") {
+                    var new_val = $.trim($("#yt_add_row input").val());
+                    $("#yt_add_row input").val('');
+                    if (data.id != 0) {
+                        $("#yt_add_row span").fadeIn(500);
+                        var new_row = '<div class="yt_row" id="'+data.id+'">';
+                        new_row += '<input type="checkbox" checked="checked" onclick="status_switch(this)"/>';
+                        new_row += '<input type="text" value="'+new_val+'" onfocus="request_focus(this)" onblur="request_blur(this)"/>';
+                        new_row += '<select onchange="change_category(this)">';
+                        for (var c in data.categories) {
+                            new_row += '<option value="'+data.categories[c].id+'"';
+                            if (data.categories[c].id == $("#youtube_category").val()) new_row += ' selected';
+                            new_row += '>'+data.categories[c].name;
+                            new_row += '</option>';
+                        }
+                        new_row += '</select>';
+                        new_row += '<img src="/images/galochka.png"/>';
+                        new_row += '<a href="javascript:void(0)" onclick="delete_row('+data.id+')">Удалить</a>';
+                        new_row += '</div>';
+                        if ($(".yt_row").length > 0) $(".yt_row").last().after(new_row);
+                        else $("#yt_add_row").after(new_row);
+                        timeout_id = window.setTimeout('$("#yt_add_row span").fadeOut(500)',3000);
+                    }
+                } else {
+                    $("#yt_add_row span").addClass('red').html(data).show();
+                }
+            }, "json");
+        }
+    }
+    
+    function status_switch(elem) {
+        status = $(elem).is(':checked');
+        id = $(elem).parent().attr('id');
+        $.post( "youtube/save", {id: id, status: status}, function(data) {
+            if (data == "ok") {
+               $("#"+id+" img").fadeIn(500);
+               timeout_id = window.setTimeout('$("#'+id+' img").fadeOut(500)',2000);
+            } else {
+                $("#youtube_edit .error").html(data).show();
+            }
+        });
+    }
+    
+    function change_category(elem) {
+        category = $(elem).val();
+        id = $(elem).parent().attr('id');
+        $.post( "youtube/save", {id: id, category: category}, function(data) {
+            if (data == "ok") {
+               $("#"+id+" img").fadeIn(500);
+               timeout_id = window.setTimeout('$("#'+id+' img").fadeOut(500)',2000);
+            } else {
+                $("#youtube_edit .error").html(data).show();
+            }
+        });
+    }
+    
+    function request_focus(elem) {
+        actual_request[$(elem).parent().attr('id')] = $.trim($(elem).val());
+    }
+    
+    function request_blur(elem) {
+        request = $.trim($(elem).val());
+        id = $(elem).parent().attr('id');
+        if (request != actual_request[id]) {
+            $.post( "youtube/save", {id: id, request: request}, function(data) {
+                if (data == "ok") {
+                    $("#"+id+" img").fadeIn(500);
+                    timeout_id = window.setTimeout('$("#'+id+' img").fadeOut(500)',2000);
+                } else {
+                    $("#youtube_edit .error").html(data).show();
+                }
+            });
+        }
+    }
+    
+    function delete_row(id) {
+        if (confirm('Вы увурены?')) {
+            $.post( "youtube/delete", {id: id}, function(data) {
+                if (data.result=="ok") {
+                    $("#"+data.id).remove();
+                } else {
+                    $("#youtube_edit .error").html(data).show();
+                }
+            }, "json");
+        };
+    }
+    
+</script>

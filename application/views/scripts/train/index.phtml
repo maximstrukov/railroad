@@ -1,0 +1,16 @@
+<?php
+// Создаём заголовок страницы, который загрузится в layout
+$this->title = "Список поездов";
+$this->headTitle($this->title);
+?>
+<div class="ajax_search">
+    <input type="text" id="train_search" value="<?php echo $this->query; ?>"/>
+</div>
+<div class="table">
+    <table class="train_list">
+            <?php
+                echo $this->partialLoop('partials/train.phtml', $this->trains);
+            ?>
+    </table>
+</div>
+<?php if ($this->pages > 1) echo $this->partial('partials/pagination.phtml', array('controller'=>'train')); ?>

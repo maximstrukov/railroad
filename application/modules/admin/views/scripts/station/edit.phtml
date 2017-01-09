@@ -1,0 +1,12 @@
+<?php
+    // Создаём заголовок страницы, который загрузится в layout
+    $this->title = "Редактирование станции";
+    $this->headTitle($this->title);
+?>
+<div class="admin_options">
+    <a class="del_link" href="/admin/station/delete/<?php echo $this->id; ?>">Удалить</a>
+</div>
+<?php
+    // Выводим форму, полученную из контроллера
+    echo $this->form ;
+?>

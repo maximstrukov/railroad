@@ -1,0 +1,18 @@
+<?php
+// Создаём заголовок страницы, который загрузится в layout
+$this->title = "Список станций";
+$this->headTitle($this->title);
+?>
+<p><a href="<?php echo $this->url(array('controller'=>'station','action'=>'add'));?>">Добавить станцию</a></p>
+<div class="ajax_search">
+    <input type="text" id="station_search" value="<?php echo $this->query; ?>"/>
+</div>
+<div class="table">
+    <table class="stations">
+        <?php
+            // Создаём patrialLoop, передав массив станций, полученных от контроллера
+            echo $this->partialLoop('partials/station.phtml', $this->stations);
+        ?>
+    </table>
+</div>
+<?php if ($this->pages > 1) echo $this->partial('partials/pagination.phtml', array('controller'=>'station')); ?>

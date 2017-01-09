@@ -1,0 +1,124 @@
+<?php
+$this->title = "Запросы Youtube";
+$this->headTitle($this->title);
+$ids = '';
+foreach ($this->ids_main as $id) {
+    if (!empty($ids)) $ids .= ',';
+    $ids .= $id['id'];
+}
+?>
+<input type="hidden" id="ids" value="<?php echo $ids; ?>"/>
+
+<?php
+foreach ($this->cat_ids as $cat_id => $requests):
+    $ids = '';
+    foreach ($requests as $id) {
+        if (!empty($ids)) $ids .= ',';
+        $ids .= $id['id'];
+    }
+    ?>
+    <input type="hidden" id="cat<?php echo $cat_id ?>" value="<?php echo $ids; ?>"/>
+<?php endforeach; ?>
+
+<div id="categories">
+    <a href="javascript:void(0)" _id="0" class="active">Основное</a>
+    <?php foreach ($this->categories as $category): ?>
+    <a href="javascript:void(0)" _id="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></a>
+    <?php endforeach; ?>
+    <div class="clear"></div>
+</div>
+
+<div id="progress">
+    <span>0%</span>
+    <div id="bar"></div>
+</div>
+<div id="youtube_results">
+</div>
+<script type="text/javascript">
+    var ids, ids_arr, cnt;
+    $(window).load(function(){
+        
+        ids = $("#ids").val();
+        if (ids != '') {
+            queries = ids.split(',');
+            $("#progress").show();
+            load_results(queries);
+        }
+    });
+    
+    function load_results(ids_arr) {
+        $("#progress span").html('0%');
+        $("#progress #bar").width('0px');
+        
+        cnt = -1;
+        for (key in ids_arr) {
+            
+            if ($("#result"+ids_arr[key]).length > 0) {
+                $("#result"+ids_arr[key]).show();
+                cnt = cnt + 1;
+                if (cnt == (ids_arr.length-1)) percent = '100%';
+                else percent = Math.round(((parseInt(cnt)+1)/ids_arr.length)*100).toString() + '%';
+                $("#bar").width(percent);
+                $("#progress span").html(percent);
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "youtube/index",
+                    data: ({id : ids_arr[key]}),
+                    dataType: "json",
+                    //async: false,
+                    success: function(data){
+                        response = '<div class="youtube_result" id="result'+data.id+'">';
+                        response += "<h2>"+data.query+"<a class='expand_link' id='exlink_"+(cnt+2)+"' href='javascript:void(0)' onclick='exlink_click(this)'>Expand</a></h2>";
+                        first_row = Math.floor(data.videos.length/3);
+                        for (vid in data.videos) {
+                            if (vid >= first_row) ex_class = ' extended';
+                            else ex_class = '';
+                            response += "<div class='video_item vi_"+(cnt+2)+ex_class+"'>";
+                            response += "<span>"+data.videos[vid].published+"</span>";
+                            response += "<a href='https://www.youtube.com/watch?v="+data.videos[vid].id+"' target='_blank'><img src='"+data.videos[vid].img+"'/></a>";
+                            response += "<div class='video_title'>"+data.videos[vid].title+"</div>";
+                            response += "</div>";
+                        }
+                        response += "<div class='clear'></div>";
+                        response += "<br/><hr/><br/></div>";
+                        $("#youtube_results").append(response);
+                        cnt = cnt + 1;
+                        if (cnt == (ids_arr.length-1)) percent = '100%';
+                        else percent = Math.round(((parseInt(cnt)+1)/ids_arr.length)*100).toString() + '%';
+                        $("#bar").width(percent);
+                        $("#progress span").html(percent);
+                    }
+                });
+            }
+        }
+    }
+    
+    function exlink_click(link) {
+        its_id = $(link).attr('id').replace("exlink_", "");
+        if ($(link).html()=='Expand') {
+            $(".extended.vi_"+its_id).show();
+            $(link).html('Collapse');
+        } else {
+            $(".extended.vi_"+its_id).hide();
+            $(link).html('Expand');
+        }
+    }
+    
+    $("#categories a").click(function() {
+        category = $(this).attr('_id');
+        if (category == $(".category a.active").attr("_id")) return false;
+        else {
+            if ($(".youtube_result").length > 0) $(".youtube_result").hide();
+            $("#categories a").removeClass("active");
+            $(this).addClass("active");
+            if (category == 0) ids = $("#ids").val();
+            else ids = $("#cat"+category).val();
+            if (ids != '') {
+                queries = ids.split(',');
+                load_results(queries);
+            }
+        }
+    });
+    
+</script>

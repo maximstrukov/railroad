@@ -1,0 +1,167 @@
+/* 
+    Document   : admin
+    Created on : 12.07.2012, 15:23:45
+    Author     : Max
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+body {
+    background-color: #BA55D3;
+}
+#old_number-element {
+    margin:0;
+}
+dl.zend_form dt {
+    float:left;
+    line-height: 28px;
+}
+dl.zend_form dd {
+    margin-left: 100px;
+    margin-bottom: 10px;
+}
+#admin-header a.guest_link {
+    color: blue;
+    text-decoration: none;
+    margin-left: 15px;
+}
+#admin-header a.guest_link:hover {
+    text-decoration: underline;
+}
+.admin_options {
+    padding-bottom: 10px;
+}
+.admin_options a {
+    margin-right: 10px;
+}
+#stop_rows .station_input {
+    margin-left: 6px;
+}
+form#station ul.errors li {
+    margin-left: -75px;
+}
+#youtube_edit {
+    position: relative;
+}
+#youtube_edit textarea {
+    border: 1px solid #726F98;
+    height: 400px;
+    padding: 5px;
+    width: 700px;    
+}
+#youtube_edit .saved {
+    height: 30px;
+    padding-top: 15px;
+}
+#youtube_edit .saved input {
+    border: 1px solid #726F98;
+    padding: 3px;
+    cursor: pointer;
+    height: 30px;
+    float: left;
+    margin-left: 18px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+#youtube_edit .saved span {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 15px;
+    color: blue;
+    font-weight: bold;
+    display: none;
+}
+#youtube_edit .error {
+    padding-top: 10px;
+    color: red;
+}
+#youtube_edit .youtube_run {
+    background-color: #FFD4E1;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #723287;
+    display: block;
+    font-weight: bold;
+    height: 25px;
+    left: 220px;
+    line-height: 25px;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    top: -34px;
+    width: 110px;
+}
+#youtube_edit .youtube_run:hover {
+    background-color: #71B2B7;
+    color: #FFCCFF;
+}
+
+.yt_row {
+    margin-bottom: 10px;
+    height: 24px;
+}
+.yt_row input[type="checkbox"] {
+    float:left;
+    margin-top: 6px;
+}
+.yt_row input[type="text"] {
+    float:left;
+    margin: 0 5px;
+    font-size: 14px;
+    padding: 3px;
+    width: 300px;
+    border: 1px solid #0093ff
+}
+.yt_row a {
+    float: left;
+    position: relative;
+    left: 30px;
+    font-size: 14px;
+}
+#yt_add_row {
+    margin-bottom:20px;
+    margin-left:18px;
+}
+#yt_add_row input {
+    font-size: 14px;
+    padding: 3px;
+    width: 300px;
+    border: 1px solid #0093ff
+}
+#yt_add_row span {
+    color:blue;
+    font-weight: bold;
+    margin-left: 10px;
+    display:none;
+}
+#yt_add_row span.red {
+    color: red;
+    font-weight: normal;
+}
+.yt_row img {
+    height:23px;
+    float:left;
+    display:none;
+    position: absolute;
+    left: 440px;
+}
+#yt_add_row a {
+    margin-left: 30px;
+    font-size: 14px;
+}
+#youtube_category {
+    padding: 1px 5px;
+    width: 105px;
+}
+.yt_row select {
+    padding: 1px 5px;
+    width: 105px;
+    float: left;
+}

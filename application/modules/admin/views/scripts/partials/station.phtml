@@ -1,0 +1,15 @@
+<tr>
+    <td width="30"><?php echo ($this->partialCounter + ($this->partialLoop()->view->page - 1)*$this->partialLoop()->view->pagesize); ?></td>
+    <td class="name-cell"><?php echo $this->escape($this->name);?></td>
+    <td class="actions">
+        <a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'view', 'id'=>$this->id),'adminviewStation',true);?>">
+            <img src="/images/admin_view.png" alt="Просмотр" title="Просмотр"/>
+        </a>
+        <a href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'edit', 'id'=>$this->id),'editStation',true);?>">
+            <img src="/images/admin_edit.png" alt="Редактировать" title="Редактировать"/>
+        </a>
+        <a class="del_link" href="<?php echo $this->url(array('module'=>'admin','controller'=>'station', 'action'=>'delete', 'id'=>$this->id),'deleteStation',true);?>">
+            <img src="/images/admin_delete.png" alt="Удалить" title="Удалить"/>
+        </a>
+    </td>
+</tr>
