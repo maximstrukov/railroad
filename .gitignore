@@ -1,0 +1,8 @@
+# Local configs
+application/configs/*
+
+# Binary gettext files
+*.mo
+
+ Legacy ZF1
+library/
